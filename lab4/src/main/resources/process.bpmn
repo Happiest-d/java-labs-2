@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0d8icq1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.21.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="Vacancy-response" name="Send Vacancy Response" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1" name="Start">
+      <bpmn:outgoing>Flow_0z686nc</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0z686nc" sourceRef="StartEvent_1" targetRef="Activity_0uxts5u" />
+    <bpmn:serviceTask id="Activity_0uxts5u" name="Check Vacancy" camunda:type="external" camunda:topic="check-vacancy">
+      <bpmn:incoming>Flow_0z686nc</bpmn:incoming>
+      <bpmn:outgoing>Flow_0g3dqk5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_080alf9">
+      <bpmn:incoming>Flow_0g3dqk5</bpmn:incoming>
+      <bpmn:outgoing>Flow_188ueyh</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1aae5oh</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0g3dqk5" sourceRef="Activity_0uxts5u" targetRef="Gateway_080alf9" />
+    <bpmn:sequenceFlow id="Flow_188ueyh" name="Available" sourceRef="Gateway_080alf9" targetRef="Activity_1txnypw">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${vacancyAvailable}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_1txnypw" name="Send Response" camunda:type="external" camunda:topic="send-response">
+      <bpmn:incoming>Flow_188ueyh</bpmn:incoming>
+      <bpmn:outgoing>Flow_17cilhy</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1aae5oh" name="Not available" sourceRef="Gateway_080alf9" targetRef="Activity_120am1e">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!vacancyAvailable}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_120am1e" name="Notify No Vacancy" camunda:type="external" camunda:topic="notify-no-vacancy">
+      <bpmn:incoming>Flow_1aae5oh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vm1odb</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_1wkcptx" name="Quit">
+      <bpmn:incoming>Flow_1vm1odb</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1vm1odb" sourceRef="Activity_120am1e" targetRef="Event_1wkcptx" />
+    <bpmn:endEvent id="Event_1gnb327" name="Quit">
+      <bpmn:incoming>Flow_17cilhy</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_17cilhy" sourceRef="Activity_1txnypw" targetRef="Event_1gnb327" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Vacancy-response">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="185" y="142" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_065juib_di" bpmnElement="Activity_0uxts5u">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_080alf9_di" bpmnElement="Gateway_080alf9" isMarkerVisible="true">
+        <dc:Bounds x="425" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lo3bna_di" bpmnElement="Activity_1txnypw">
+        <dc:Bounds x="600" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1pgx9bj_di" bpmnElement="Activity_120am1e">
+        <dc:Bounds x="600" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1wkcptx_di" bpmnElement="Event_1wkcptx">
+        <dc:Bounds x="832" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="839" y="255" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1gnb327_di" bpmnElement="Event_1gnb327">
+        <dc:Bounds x="832" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="839" y="142" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0z686nc_di" bpmnElement="Flow_0z686nc">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g3dqk5_di" bpmnElement="Flow_0g3dqk5">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="425" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_188ueyh_di" bpmnElement="Flow_188ueyh">
+        <di:waypoint x="475" y="117" />
+        <di:waypoint x="600" y="117" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="517" y="99" width="44" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1aae5oh_di" bpmnElement="Flow_1aae5oh">
+        <di:waypoint x="450" y="142" />
+        <di:waypoint x="450" y="230" />
+        <di:waypoint x="600" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="488" y="213" width="64" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17cilhy_di" bpmnElement="Flow_17cilhy">
+        <di:waypoint x="700" y="117" />
+        <di:waypoint x="832" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vm1odb_di" bpmnElement="Flow_1vm1odb">
+        <di:waypoint x="700" y="230" />
+        <di:waypoint x="832" y="230" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
