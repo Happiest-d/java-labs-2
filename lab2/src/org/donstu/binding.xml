@@ -1,0 +1,10 @@
+<!--?xml version="1.0" encoding="UTF-8" standalone="yes" ?-->
+<jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
+                xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                wsdlLocation="http://127.0.0.1:8088/hh?wsdl" >
+    <jaxws:bindings node="//wsdl:portType[@name='HhService']">
+        <jaxws:bindings node="wsdl:operation[@name='getCompanyList']">
+            <jaxws:enableAsyncMapping>true</jaxws:enableAsyncMapping>
+        </jaxws:bindings>
+    </jaxws:bindings>
+</jaxws:bindings>
